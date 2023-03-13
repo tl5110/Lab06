@@ -11,7 +11,10 @@ import java.util.*;
  * @author YOUR NAME HERE
  */
 public class Maze implements IMaze {
-    private Node[][] graph;
+    private final Node[][] graph;
+    private final int rows;
+    private final int columns;
+    private final Coordinates home;
 
     /**
      * Create a new maze from a file.
@@ -21,88 +24,105 @@ public class Maze implements IMaze {
     public Maze(String filename) throws IOException {
         try (BufferedReader in = new BufferedReader(new FileReader(filename))) {
             // first line is: rows cols
-            String line = in.readLine();
-            String[] fields = line.split("\\s+");
+            String[] dimensions = in.readLine().split("\\s+");
             // e.g. to read number of rows: Integer.parseInt(fields[0]);
-            int rows = Integer.parseInt(fields[0]);
+            this.rows = Integer.parseInt(dimensions[0]);
             // e.g. to read number of columns: Integer.parseInt(fields[1]);
-            int columns = Integer.parseInt(fields[1]);
+            this.columns = Integer.parseInt(dimensions[1]);
             graph = new Node[rows][columns];
             for(int r = 0; r < rows; r++){
                 String[] row = in.readLine().split("\\s+");
-                for(int c = 0; c < rows; c++){
+                for(int c = 0; c <= rows; c++){
                     graph[r][c] = new Node(new Coordinates(r,c));
+//                    switch(row[c]){
+//                        case NORTH -> graph[r][c].addNeighbor(new Coordinates(r-1, c));
+//                        case SOUTH -> graph[r][c].addNeighbor(new Coordinates(r+1, c));
+//                        case EAST -> graph[r][c].addNeighbor(new Coordinates(r, c+1));
+//                        case WEST -> graph[r][c].addNeighbor(new Coordinates(r, c-1));
+//                    }
                     if(row[c].contains(NORTH)){
                         graph[r][c].addNeighbor(new Coordinates(r-1, c));
-                    } else if(row[r].contains(IMaze.SOUTH)){
+                    } else if(row[c].contains(IMaze.SOUTH)){
                         graph[r][c].addNeighbor(new Coordinates(r+1, c));
-                    } else if(row[r].contains(IMaze.EAST)){
+                    } else if(row[c].contains(IMaze.EAST)){
                         graph[r][c].addNeighbor(new Coordinates(r, c+1));
-                    } else if(row[r].contains(IMaze.WEST)){
+                    } else if(row[c].contains(IMaze.WEST)){
                         graph[r][c].addNeighbor(new Coordinates(r, c-1));
                     }
                 }
             }
             String[] start = in.readLine().split("\\s+");
-            Coordinates s = new Coordinates(start[1]);
+            this.home = new Coordinates(start[1]);
+            graph[home.row()][home.col()].setName(start[0]);
 
-//            int numTreasures = in.readLine();
+            String totalTreasures = in.readLine();
+            int numTreasures = Integer.parseInt(totalTreasures);
 
-
-            // TODO
+            for(int t = 0; t < numTreasures; t++){
+                String[] treasure = in.readLine().split("\\s+");
+                Coordinates loc = new Coordinates(treasure[1]);
+                graph[loc.row()][loc.col()].setName(treasure[0]);
+            }
         } // any exceptions generated will get thrown to the main program
     }
 
     @Override
     public int getRows() {
-        // TODO
-        return 0;
+        return rows;
     }
 
     @Override
     public int getCols() {
-        // TODO
-        return 0;
+        return columns;
     }
 
     @Override
     public boolean hasCoordinates(Coordinates location) {
-        // TODO
-        return false;
+        return location.row() <= rows && location.col() <= columns;
     }
 
     @Override
     public boolean isNeighbor(Coordinates src, Coordinates dest) {
-        // TODO
+        for(Coordinates cell : graph[src.row()][src.col()].getNeighbors()){
+            if(cell.row() == dest.row() && cell.col() == dest.col()){
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
     public String getCell(Coordinates location) {
-        // TODO
-        return null;
+        return graph[location.row()][location.col()].getName();
     }
 
     @Override
     public Coordinates getHome() {
-        // TODO
-        return null;
+        return home;
     }
 
     @Override
     public boolean hasTreasure(Coordinates location) {
-        // TODO
-        return false;
+        return !graph[location.row()][location.col()].getName().equals(".");
     }
 
     @Override
     public Collection<Treasure> getTreasures() {
-        // TODO
-        return new ArrayList<>();
+        ArrayList<Treasure> treasures = new ArrayList<>();
+        for(int r = 0; r < rows; r++){
+            for(int c = 0; c <= rows; c++){
+                Coordinates treasureLoc = new Coordinates(r, c);
+                String treasure = graph[r][c].getName();
+                if(!treasure.equals(".")){
+                    treasures.add(new Treasure(treasure, treasureLoc));
+                }
+            }
+        }
+        return treasures;
     }
 
     @Override
     public Collection<Coordinates> getNeighbors(Coordinates location) {
-        // TODO
-        return new ArrayList<>();    }
+        return graph[location.row()][location.col()].getNeighbors();
+    }
 }

@@ -18,17 +18,16 @@ import java.util.Set;
  * @author RIT CS
  */
 public class Node {
-    /** Name associated with this node */
+    /** The name, or treasure, associated with this node */
     private String name = "."; // home(*) , treasure(A), empty(.)
-    private Coordinates location;
-
+    /** The location associated with this node */
+    private final Coordinates location;
     /** Neighbors of this node are stored as a set (adjacency list) */
-    private Set<Coordinates> neighbors;
-    private Treasure treasure;
+    private final Set<Coordinates> neighbors;
 
     /**
-     * Constructor initializes Node with an empty list of neighbors.
-     *
+     * Constructor initializes Node with the inputted location
+     * and an empty list of neighbors.
      */
     public Node(Coordinates location) {
         this.location = location;
@@ -44,6 +43,16 @@ public class Node {
         return name;
     }
 
+    /**
+     * Get the location associated with this object.
+     *
+     * @return location.
+     */
+    public Coordinates getLocation() { return location; }
+
+    /**
+     * Sets the name associated with this object.
+     */
     public void setName(String name) {
         this.name = name;
     }
@@ -61,7 +70,6 @@ public class Node {
     /**
      * Add a neighbor to this node. Checks if already present, and does not
      * duplicate in this case.
-     *
      */
     public void addNeighbor(Coordinates coordinate) {
         if(!neighbors.contains(coordinate)) neighbors.add(coordinate);
@@ -92,8 +100,7 @@ public class Node {
     @Override
     public boolean equals(Object other) {
         boolean result = false;
-        if (other instanceof Node) {
-            Node n = (Node) other;
+        if (other instanceof Node n) {
             result = this.name.equals(n.name);
         }
         return result;

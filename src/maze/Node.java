@@ -1,6 +1,4 @@
 package maze;
-import maze.Coordinates;
-import maze.Treasure;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -19,7 +17,7 @@ import java.util.Set;
  */
 public class Node {
     /** The name, or treasure, associated with this node */
-    private String name = "."; // home(*) , treasure(A), empty(.)
+    private String name = "."; // empty(.), home(*), treasure(A, B, C, ...)
     /** The location associated with this node */
     private final Coordinates location;
     /** Neighbors of this node are stored as a set (adjacency list) */
@@ -43,16 +41,7 @@ public class Node {
         return name;
     }
 
-    /**
-     * Get the location associated with this object.
-     *
-     * @return location.
-     */
-    public Coordinates getLocation() { return location; }
-
-    /**
-     * Sets the name associated with this object.
-     */
+    /** Sets the name associated with this object. */
     public void setName(String name) {
         this.name = name;
     }
@@ -77,8 +66,9 @@ public class Node {
 
     /**
      * Method to generate a string associated with the node, including the
-     * name of the node followed by the names of its neighbors.  Overrides
-     * Object toString method.
+     * name of the node followed by its location and the
+     * locations of its neighbors.
+     * Overrides Object toString method.
      *
      * @return string associated with the node.
      */
@@ -86,7 +76,8 @@ public class Node {
     public String toString() {
         String result = this.name + ": ";
         for (Coordinates neighbor: this.neighbors) {
-            result = neighbor.toString() + " ";
+            result = location.toString() + "\nNeighbors: " +
+                    neighbor.toString();
         }
         return result;
     }

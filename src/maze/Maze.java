@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * Student implementation of the maze.
  *
- * @author YOUR NAME HERE
+ * @author Tiffany Lee
  */
 public class Maze implements IMaze {
     private final Node[][] graph;
@@ -34,21 +34,24 @@ public class Maze implements IMaze {
                 String[] row = in.readLine().split("\\s+");
                 for(int c = 0; c <= rows; c++){
                     graph[r][c] = new Node(new Coordinates(r,c));
-//                    switch(row[c]){
-//                        case NORTH -> graph[r][c].addNeighbor(new Coordinates(r-1, c));
-//                        case SOUTH -> graph[r][c].addNeighbor(new Coordinates(r+1, c));
-//                        case EAST -> graph[r][c].addNeighbor(new Coordinates(r, c+1));
-//                        case WEST -> graph[r][c].addNeighbor(new Coordinates(r, c-1));
-//                    }
-                    if(row[c].contains(NORTH)){
-                        graph[r][c].addNeighbor(new Coordinates(r-1, c));
-                    } else if(row[c].contains(IMaze.SOUTH)){
-                        graph[r][c].addNeighbor(new Coordinates(r+1, c));
-                    } else if(row[c].contains(IMaze.EAST)){
-                        graph[r][c].addNeighbor(new Coordinates(r, c+1));
-                    } else if(row[c].contains(IMaze.WEST)){
-                        graph[r][c].addNeighbor(new Coordinates(r, c-1));
+                    for(char neighbor : row[c].toCharArray()){
+                        String ch = String.valueOf(neighbor);
+                        switch(ch){
+                            case NORTH -> graph[r][c].addNeighbor(new Coordinates(r-1, c));
+                            case SOUTH -> graph[r][c].addNeighbor(new Coordinates(r+1, c));
+                            case EAST -> graph[r][c].addNeighbor(new Coordinates(r, c+1));
+                            case WEST -> graph[r][c].addNeighbor(new Coordinates(r, c-1));
+                        }
                     }
+//                    if(row[c].contains(NORTH)){
+//                        graph[r][c].addNeighbor(new Coordinates(r-1, c));
+//                    } else if(row[c].contains(IMaze.SOUTH)){
+//                        graph[r][c].addNeighbor(new Coordinates(r+1, c));
+//                    } else if(row[c].contains(IMaze.EAST)){
+//                        graph[r][c].addNeighbor(new Coordinates(r, c+1));
+//                    } else if(row[c].contains(IMaze.WEST)){
+//                        graph[r][c].addNeighbor(new Coordinates(r, c-1));
+//                    }
                 }
             }
             String[] start = in.readLine().split("\\s+");

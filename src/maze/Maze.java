@@ -15,6 +15,7 @@ public class Maze implements IMaze {
     private final int rows;
     private final int columns;
     private final Coordinates home;
+    private final List<Treasure> treasures = new ArrayList<>();
 
     /**
      * Create a new maze from a file.
@@ -106,22 +107,21 @@ public class Maze implements IMaze {
 
     @Override
     public boolean hasTreasure(Coordinates location) {
-        return !graph[location.row()][location.col()].getName().equals(".");
+        return graph[location.row()][location.col()].getName().matches("^[a-zA-Z].*");
     }
 
     @Override
     public Collection<Treasure> getTreasures() {
-        ArrayList<Treasure> treasures = new ArrayList<>();
         for(int r = 0; r < rows; r++){
             for(int c = 0; c <= rows; c++){
                 Coordinates treasureLoc = new Coordinates(r, c);
                 String treasure = graph[r][c].getName();
-                if(!treasure.equals(".")){
-                    treasures.add(new Treasure(treasure, treasureLoc));
+                if(treasure.matches("^[a-zA-Z].*")){
+                    this.treasures.add(new Treasure(treasure, treasureLoc));
                 }
             }
         }
-        return treasures;
+        return this.treasures;
     }
 
     @Override

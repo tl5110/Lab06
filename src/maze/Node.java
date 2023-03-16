@@ -10,10 +10,12 @@ import java.util.Set;
  * 08-GraphIntro
  * The Shortest Path
  *
- * This is the representation of a node in a graph.  A node is composed of a
- * unique name, and a list of neighbor Node's.
+ * This is the representation of a node in a graph.
+ * A node is composed of a unique name, its location on a graph,
+ * and a list of neighbor Node's.
  *
  * @author RIT CS
+ * @author Tiffany Lee
  */
 public class Node {
     /** The name, or treasure, associated with this node */

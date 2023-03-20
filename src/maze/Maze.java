@@ -44,15 +44,6 @@ public class Maze implements IMaze {
                             case WEST -> graph[r][c].addNeighbor(new Coordinates(r, c-1));
                         }
                     }
-//                    if(row[c].contains(NORTH)){
-//                        graph[r][c].addNeighbor(new Coordinates(r-1, c));
-//                    } else if(row[c].contains(IMaze.SOUTH)){
-//                        graph[r][c].addNeighbor(new Coordinates(r+1, c));
-//                    } else if(row[c].contains(IMaze.EAST)){
-//                        graph[r][c].addNeighbor(new Coordinates(r, c+1));
-//                    } else if(row[c].contains(IMaze.WEST)){
-//                        graph[r][c].addNeighbor(new Coordinates(r, c-1));
-//                    }
                 }
             }
             String[] start = in.readLine().split("\\s+");
@@ -97,7 +88,13 @@ public class Maze implements IMaze {
 
     @Override
     public String getCell(Coordinates location) {
-        return graph[location.row()][location.col()].getName();
+        Treasure cell = new Treasure(graph[location.row()][location.col()].getName(), location);
+        if(cell.isCollected()){
+            graph[location.row()][location.col()].setName(EMPTY);
+            return EMPTY;
+        } else {
+            return graph[location.row()][location.col()].getName();
+        }
     }
 
     @Override

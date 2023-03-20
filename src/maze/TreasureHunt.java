@@ -38,53 +38,59 @@ public class TreasureHunt {
      */
     public void findTreasures() {
         Coordinates start = maze.getHome();
-        Coordinates end = new Coordinates(maze.getRows(), maze.getCols());
-        int steps = 1;
+        int totalSteps = 0;
 
-        List<Coordinates> path = new LinkedList<>();
         LinkedList<Coordinates> queue = new LinkedList<>();
         queue.add(start);
 
-        Map<Coordinates, Collection<Coordinates>> predecessors = new HashMap<>();
+        Map<Coordinates, Coordinates> predecessors = new HashMap<>();
 
-        while(!queue.isEmpty()){
-            Coordinates current = queue.remove();
-            if(current == end){
-                break;
-            } else if(maze.hasTreasure(current)){
-                System.out.println("Collecting: " + maze.getCell(current) + current);
-                break;
-            }
-            for(Coordinates nbr : maze.getNeighbors(current)){
-                if(!predecessors.containsKey(nbr)){
-                    predecessors.put(nbr, maze.getNeighbors(current));
-                    queue.add(nbr);
+        for(Treasure treasure : maze.getTreasures()){
+            System.out.println("Collecting: " + treasure);
+            Coordinates end = treasure.getLocation();
+            // BFS
+            while(!queue.isEmpty()){
+                Coordinates current = queue.remove();
+                Treasure cell = new Treasure(maze.getCell(current), current);
+
+                if(current == end){
+                    break;
+                } else if (treasure.equals(cell)){
+                    treasure.collect();
+                }
+
+                for(Coordinates nbr : maze.getNeighbors(current)){
+                    if(!predecessors.containsKey(nbr)){
+                        predecessors.put(nbr, current);
+                        queue.add(nbr);
+                    }
                 }
             }
-        }
-
-        if(predecessors.containsKey(end)){
-            Coordinates curr = end;
-            while(curr != start){
-                path.add(curr);
-                Collection<Coordinates> neighbors = predecessors.get(curr);
-                curr = start;
-                steps++;
+            // Path Construction
+            List<Coordinates> path = new LinkedList<>();
+            int steps = 0;
+            if(predecessors.containsKey(end)){
+                Coordinates curr = end;
+                steps += 1;
+                while(curr != start){
+                    path.add(0, curr);
+                    curr = predecessors.get(curr);
+                    steps += 2;
+                }
+                path.add(0, curr);
             }
-            path.add(curr);
+            //Printing Results
+            if(path.isEmpty()){
+                System.out.println("\tNo Path!");
+            } else {
+                System.out.println("\tPath: " + path);
+                System.out.println("\tSteps: " + steps);
+                totalSteps += steps;
+            }
+            maze.display();
         }
-        System.out.println("Path: " + path);
-        System.out.println("Steps: " + (steps + steps-1));
+        System.out.println("Total Steps: " + totalSteps);
     }
-
-//    for(int r = 0; r < maze.getRows(); r++){
-//        for(int c = 0; c < maze.getCols(); c++){
-//            Coordinates loc = new Coordinates(r, c);
-//            if(maze.hasTreasure(current.getLocation())){
-//
-//            }
-//        }
-//    }
 
     /**
      * The main method.

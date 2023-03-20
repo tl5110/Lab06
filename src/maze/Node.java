@@ -35,6 +35,13 @@ public class Node {
     }
 
     /**
+     * Get the Coordinate location associated with this object.
+     *
+     * @return location
+     */
+    public Coordinates getLocation() { return location; }
+
+    /**
      * Get the String name associated with this object.
      *
      * @return name.

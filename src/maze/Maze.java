@@ -107,7 +107,7 @@ public class Maze implements IMaze {
 
     @Override
     public boolean hasTreasure(Coordinates location) {
-        return graph[location.row()][location.col()].getName().matches("^[a-zA-Z].*");
+        return graph[location.row()][location.col()].getName().matches("^[A-Z].*");
     }
 
     @Override
@@ -116,7 +116,7 @@ public class Maze implements IMaze {
             for(int c = 0; c <= rows; c++){
                 Coordinates treasureLoc = new Coordinates(r, c);
                 String treasure = graph[r][c].getName();
-                if(treasure.matches("^[a-zA-Z].*")){
+                if(treasure.matches("^[A-Z].*")){
                     this.treasures.add(new Treasure(treasure, treasureLoc));
                 }
             }

@@ -33,7 +33,7 @@ public class Maze implements IMaze {
             graph = new Node[rows][columns];
             for(int r = 0; r < rows; r++){
                 String[] row = in.readLine().split("\\s+");
-                for(int c = 0; c <= rows; c++){
+                for(int c = 0; c < columns; c++){
                     graph[r][c] = new Node(new Coordinates(r,c));
                     for(char neighbor : row[c].toCharArray()){
                         String ch = String.valueOf(neighbor);
@@ -57,6 +57,7 @@ public class Maze implements IMaze {
                 String[] treasure = in.readLine().split("\\s+");
                 Coordinates loc = new Coordinates(treasure[1]);
                 graph[loc.row()][loc.col()].setName(treasure[0]);
+                this.treasures.add(new Treasure(treasure[0], loc));
             }
         } // any exceptions generated will get thrown to the main program
     }
@@ -88,13 +89,13 @@ public class Maze implements IMaze {
 
     @Override
     public String getCell(Coordinates location) {
-        Treasure cell = new Treasure(graph[location.row()][location.col()].getName(), location);
-        if(cell.isCollected()){
-            graph[location.row()][location.col()].setName(EMPTY);
-            return EMPTY;
-        } else {
-            return graph[location.row()][location.col()].getName();
+        for(Treasure treasure : treasures){
+            if(treasure.getLocation().equals(location) && treasure.isCollected()){
+                graph[location.row()][location.col()].setName(".");
+                return graph[location.row()][location.col()].getName();
+            }
         }
+        return graph[location.row()][location.col()].getName();
     }
 
     @Override
@@ -109,15 +110,6 @@ public class Maze implements IMaze {
 
     @Override
     public Collection<Treasure> getTreasures() {
-        for(int r = 0; r < rows; r++){
-            for(int c = 0; c <= rows; c++){
-                Coordinates treasureLoc = new Coordinates(r, c);
-                String treasure = graph[r][c].getName();
-                if(treasure.matches("^[A-Z].*")){
-                    this.treasures.add(new Treasure(treasure, treasureLoc));
-                }
-            }
-        }
         return this.treasures;
     }
 

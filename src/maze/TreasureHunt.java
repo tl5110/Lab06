@@ -57,6 +57,7 @@ public class TreasureHunt {
                     break;
                 } else if (treasure.equals(cell)){
                     treasure.collect();
+                    maze.getCell(current);
                 }
 
                 for(Coordinates nbr : maze.getNeighbors(current)){
@@ -74,20 +75,21 @@ public class TreasureHunt {
                 steps += 1;
                 while(curr != start){
                     path.add(0, curr);
-                    curr = predecessors.get(curr);
                     steps += 2;
+                    curr = predecessors.get(curr);
                 }
                 path.add(0, curr);
             }
             //Printing Results
             if(path.isEmpty()){
-                System.out.println("\tNo Path!");
+                System.out.println("\tNo path!");
             } else {
                 System.out.println("\tPath: " + path);
                 System.out.println("\tSteps: " + steps);
                 totalSteps += steps;
             }
             maze.display();
+            queue.add(start);
         }
         System.out.println("Total Steps: " + totalSteps);
     }

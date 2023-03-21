@@ -11,10 +11,15 @@ import java.util.*;
  * @author Tiffany Lee
  */
 public class Maze implements IMaze {
+    /** maze(graph) is represented using a 2D-Node */
     private final Node[][] graph;
+    /** total number of rows in the maze */
     private final int rows;
+    /** total number of rows in the maze */
     private final int columns;
+    /** coordinates, or location of home */
     private final Coordinates home;
+    /** list of all the treasures in the maze */
     private final List<Treasure> treasures = new ArrayList<>();
 
     /**
@@ -94,21 +99,44 @@ public class Maze implements IMaze {
         } // any exceptions generated will get thrown to the main program
     }
 
+    /**
+     * Get the number of rows in the maze.
+     *
+     * @return number of rows
+     */
     @Override
     public int getRows() {
         return rows;
     }
 
+    /**
+     * Get the number of columns in the maze.
+     *
+     * @return number of columns
+     */
     @Override
     public int getCols() {
         return columns;
     }
 
+    /**
+     * Is a location in the maze valid or not?
+     *
+     * @param location the location
+     * @return whether the cell is valid or not
+     */
     @Override
     public boolean hasCoordinates(Coordinates location) {
         return location.row() <= rows && location.col() <= columns;
     }
 
+    /**
+     * Is dest a neighbor of src in the maze?
+     *
+     * @param src the source cell
+     * @param dest the destination cell
+     * @return whether they are neighbors or not
+     */
     @Override
     public boolean isNeighbor(Coordinates src, Coordinates dest) {
         for(Coordinates cell : graph[src.row()][src.col()].getNeighbors()){
@@ -119,6 +147,12 @@ public class Maze implements IMaze {
         return false;
     }
 
+    /**
+     * Get the string value of the cell at a location in the maze.
+     *
+     * @param location the location
+     * @return the string at that location
+     */
     @Override
     public String getCell(Coordinates location) {
         for(Treasure treasure : treasures){
@@ -130,21 +164,43 @@ public class Maze implements IMaze {
         return graph[location.row()][location.col()].getName();
     }
 
+    /**
+     * Get the home position (must exist).
+     *
+     * @return home position
+     */
     @Override
     public Coordinates getHome() {
         return home;
     }
 
+    /**
+     * Is there a treasure at a specific location?
+     *
+     * @param location the location
+     * @return whether there is a treasure at this location or not
+     */
     @Override
     public boolean hasTreasure(Coordinates location) {
         return graph[location.row()][location.col()].getName().matches("^[A-Z].*");
     }
 
+    /**
+     * Get the collection of all treasures in the maze.
+     *
+     * @return the treasure collection
+     */
     @Override
     public Collection<Treasure> getTreasures() {
         return this.treasures;
     }
 
+    /**
+     * Get the neighbors of a cell in the maze.
+     *
+     * @param location the cell
+     * @return the cell's neighbors
+     */
     @Override
     public Collection<Coordinates> getNeighbors(Coordinates location) {
         return graph[location.row()][location.col()].getNeighbors();

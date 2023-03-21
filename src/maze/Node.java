@@ -35,13 +35,6 @@ public class Node {
     }
 
     /**
-     * Get the Coordinate location associated with this object.
-     *
-     * @return location
-     */
-    public Coordinates getLocation() { return location; }
-
-    /**
      * Get the String name associated with this object.
      *
      * @return name.
@@ -70,7 +63,7 @@ public class Node {
      * duplicate in this case.
      */
     public void addNeighbor(Coordinates coordinate) {
-        if(!neighbors.contains(coordinate)) neighbors.add(coordinate);
+        neighbors.add(coordinate);
     }
 
     /**

@@ -22,7 +22,7 @@ public class Maze implements IMaze {
      * @param filename the name of the maze file
      * @throws IOException if a problem is encountered reading the file
      */
-    public Maze(String filename) throws IOException {
+    public Maze(String filename) throws IOException, MazeException{
         try (BufferedReader in = new BufferedReader(new FileReader(filename))) {
             // first line is: rows cols
             String[] dimensions = in.readLine().split("\\s+");
@@ -30,6 +30,11 @@ public class Maze implements IMaze {
             this.rows = Integer.parseInt(dimensions[0]);
             // e.g. to read number of columns: Integer.parseInt(fields[1]);
             this.columns = Integer.parseInt(dimensions[1]);
+            if(rows <= 0){
+                throw new MazeException("rows must be greater than zero: " + rows);
+            } else if(columns <= 0){
+                throw new MazeException("columns must be greater than zero: " + columns);
+            }
             graph = new Node[rows][columns];
             for(int r = 0; r < rows; r++){
                 String[] row = in.readLine().split("\\s+");
@@ -38,15 +43,42 @@ public class Maze implements IMaze {
                     for(char neighbor : row[c].toCharArray()){
                         String ch = String.valueOf(neighbor);
                         switch(ch){
-                            case NORTH -> graph[r][c].addNeighbor(new Coordinates(r-1, c));
-                            case SOUTH -> graph[r][c].addNeighbor(new Coordinates(r+1, c));
-                            case EAST -> graph[r][c].addNeighbor(new Coordinates(r, c+1));
-                            case WEST -> graph[r][c].addNeighbor(new Coordinates(r, c-1));
+                            case NORTH -> {
+                                if((r-1) < 0){
+                                    throw new MazeException
+                                            ("cannot have a north neighbor: " + new Coordinates(r, c));
+                                }
+                                graph[r][c].addNeighbor(new Coordinates(r-1, c));
+                            }
+                            case SOUTH -> {
+                                if((r+1) >= this.rows){
+                                    throw new MazeException
+                                            ("cannot have a south neighbor: " + new Coordinates(r, c));
+                                }
+                                graph[r][c].addNeighbor(new Coordinates(r+1, c));
+                            }
+                            case EAST -> {
+                                if((c+1) >= this.columns){
+                                    throw new MazeException
+                                            ("cannot have a east neighbor: " + new Coordinates(r, c));
+                                }
+                                graph[r][c].addNeighbor(new Coordinates(r, c+1));
+                            }
+                            case WEST -> {
+                                if((c-1) < 0){
+                                    throw new MazeException
+                                            ("cannot have a west neighbor: " + new Coordinates(r, c));
+                                }
+                                graph[r][c].addNeighbor(new Coordinates(r, c-1));
+                            }
                         }
                     }
                 }
             }
             String[] start = in.readLine().split("\\s+");
+            if(start.length < 2){
+                throw new MazeException("home position not specified!");
+            }
             this.home = new Coordinates(start[1]);
             graph[home.row()][home.col()].setName(start[0]);
 

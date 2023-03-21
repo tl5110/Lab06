@@ -11,7 +11,7 @@ import java.util.*;
  *
  *
  * @author RIT CS
- * @author YOUR NAME HERE
+ * @author Tiffany Lee
  */
 public class TreasureHunt {
     /** the maze */
@@ -23,7 +23,7 @@ public class TreasureHunt {
      * @param filename the maze file
      * @throws IOException if there is a problem reading the file
      */
-    public TreasureHunt(String filename) throws IOException {
+    public TreasureHunt(String filename) throws IOException, MazeException{
         this.maze = new Maze(filename);
         this.maze.display();
     }
@@ -43,10 +43,10 @@ public class TreasureHunt {
         LinkedList<Coordinates> queue = new LinkedList<>();
         queue.add(start);
 
-        Map<Coordinates, Coordinates> predecessors = new HashMap<>();
 
         for(Treasure treasure : maze.getTreasures()){
             System.out.println("Collecting: " + treasure);
+            Map<Coordinates, Coordinates> predecessors = new HashMap<>();
             Coordinates end = treasure.getLocation();
             // BFS
             while(!queue.isEmpty()){
@@ -108,7 +108,7 @@ public class TreasureHunt {
                 TreasureHunt treasureHunt = new TreasureHunt(args[0]);
                 // perform searches over our maze
                 treasureHunt.findTreasures();
-            } catch (IOException ioe) {
+            } catch (IOException | MazeException ioe) {
                 System.err.println(ioe.getMessage());
             }
         }

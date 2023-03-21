@@ -43,7 +43,6 @@ public class TreasureHunt {
         LinkedList<Coordinates> queue = new LinkedList<>();
         queue.add(start);
 
-
         for(Treasure treasure : maze.getTreasures()){
             System.out.println("Collecting: " + treasure);
             Map<Coordinates, Coordinates> predecessors = new HashMap<>();
@@ -52,14 +51,12 @@ public class TreasureHunt {
             while(!queue.isEmpty()){
                 Coordinates current = queue.remove();
                 Treasure cell = new Treasure(maze.getCell(current), current);
-
                 if(current == end){
                     break;
                 } else if (treasure.equals(cell)){
                     treasure.collect();
                     maze.getCell(current);
                 }
-
                 for(Coordinates nbr : maze.getNeighbors(current)){
                     if(!predecessors.containsKey(nbr)){
                         predecessors.put(nbr, current);

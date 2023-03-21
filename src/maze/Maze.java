@@ -17,13 +17,14 @@ public class Maze implements IMaze {
     private final int rows;
     /** total number of rows in the maze */
     private final int columns;
-    /** coordinates, or location of home */
+    /** coordinates, or location of home position */
     private final Coordinates home;
     /** list of all the treasures in the maze */
     private final List<Treasure> treasures = new ArrayList<>();
 
     /**
      * Create a new maze from a file.
+     *
      * @param filename the name of the maze file
      * @throws IOException if a problem is encountered reading the file
      */
@@ -33,13 +34,15 @@ public class Maze implements IMaze {
             String[] dimensions = in.readLine().split("\\s+");
             // e.g. to read number of rows: Integer.parseInt(fields[0]);
             this.rows = Integer.parseInt(dimensions[0]);
-            // e.g. to read number of columns: Integer.parseInt(fields[1]);
-            this.columns = Integer.parseInt(dimensions[1]);
             if(rows <= 0){
                 throw new MazeException("rows must be greater than zero: " + rows);
-            } else if(columns <= 0){
+            }
+            // e.g. to read number of columns: Integer.parseInt(fields[1]);
+            this.columns = Integer.parseInt(dimensions[1]);
+            if(columns <= 0){
                 throw new MazeException("columns must be greater than zero: " + columns);
             }
+            // Cells and Neighbors
             graph = new Node[rows][columns];
             for(int r = 0; r < rows; r++){
                 String[] row = in.readLine().split("\\s+");
@@ -80,16 +83,17 @@ public class Maze implements IMaze {
                     }
                 }
             }
+            // Home position
             String[] start = in.readLine().split("\\s+");
             if(start.length < 2){
                 throw new MazeException("home position not specified!");
             }
             this.home = new Coordinates(start[1]);
             graph[home.row()][home.col()].setName(start[0]);
-
+            // Total number of treasures
             String totalTreasures = in.readLine();
             int numTreasures = Integer.parseInt(totalTreasures);
-
+            // Treasures
             for(int t = 0; t < numTreasures; t++){
                 String[] treasure = in.readLine().split("\\s+");
                 Coordinates loc = new Coordinates(treasure[1]);
@@ -111,7 +115,6 @@ public class Maze implements IMaze {
 
     /**
      * Get the number of columns in the maze.
-     *
      * @return number of columns
      */
     @Override
